@@ -47,3 +47,22 @@
 
 
 【权限控制】
+	---- 针对已经认证的用户
+
+1、通过路由中间件，获取左侧一二级菜单，添加到$request->attributes属性中
+2、
+（1）通过路由中间件，来判断用户是否有权限访问;即用户访问的权限在不在其权限组内
+（2）通过Gate类进行授权，将用户所有的权限全部define进去;再在中间件中判断当前权限是否授权allow。
+【在AuthServiceProvider类中，进行授权：
+			 Gate::define($permission->name, function ($user) use ($permission) {
+                return $user->per($user->role_id, $permission->id);
+            });
+		/**
+         * 共有权限
+         **/
+        foreach (config('auth.public') as $name) {
+            Gate::define($name, function () {
+                return true;
+            });
+        }
+    】
